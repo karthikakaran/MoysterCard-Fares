@@ -1,3 +1,6 @@
+/**
+ * Interface for Peek hours type
+ **/
 interface PeekHours {
   [day: string]: {
     mStart: string;
@@ -7,6 +10,9 @@ interface PeekHours {
   };
 }
 
+/**
+ * Peek hours timings - subjected to change when stations or zone expands
+ **/
 export const peekHours: PeekHours = {
   weekday: {
     mStart: "7:00:00",
@@ -22,12 +28,18 @@ export const peekHours: PeekHours = {
   },
 };
 
+/**
+ * Interface for zone rates and caps type
+ **/
 interface ZoneToZoneRules {
   [fromZone: string]: {
     [toZone: string]: number;
   };
 }
 
+/**
+ * Peek hours fares - subjected to change when stations or zone expands
+ **/
 export const peekFares: ZoneToZoneRules = {
   "1": {
     "1": 30,
@@ -39,6 +51,9 @@ export const peekFares: ZoneToZoneRules = {
   },
 };
 
+/**
+ * Off-peek hours timings - subjected to change when stations or zone expands
+ **/
 export const offPeekFares: ZoneToZoneRules = {
   "1": {
     "1": 25,
@@ -50,6 +65,9 @@ export const offPeekFares: ZoneToZoneRules = {
   },
 };
 
+/**
+ * Day cap limits - subjected to change when stations or zone expands
+ **/
 export const dailyCapLimits: ZoneToZoneRules = {
   "1": {
     "1": 100,
@@ -61,6 +79,9 @@ export const dailyCapLimits: ZoneToZoneRules = {
   },
 };
 
+/**
+ * Week cap limits - subjected to change when stations or zone expands
+ **/
 export const weeklyCapLimits: ZoneToZoneRules = {
   "1": {
     "1": 500,
