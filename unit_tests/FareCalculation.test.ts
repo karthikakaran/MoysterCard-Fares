@@ -3,10 +3,11 @@ import FareCalculation from "../src/FareCalcution";
 import * as inputFile1 from "./data/listJourney.json";
 import * as inputFile2 from "./data/listJourney_cap.json";
 import * as inputFile3 from "./data/listJourney_peek_hr.json";
-import * as inputFile4 from "./data/listJourney_invalid.json";
+import * as inputFile4 from "./data/listJourney_invalid_inp1.json";
 import * as inputFile5 from "./data/listJourney_cap_zone1.json";
 import * as inputFile6 from "./data/listJourney_cap_zone2.json";
 import * as inputFile7 from "./data/listJourney_next_yr_zone1.json";
+import * as inputFile8 from "./data/listJourney_invalid_inp2.json";
 
 describe("Daily Fare Calculations", () => {
   const fareCalc = new FareCalculation();
@@ -62,8 +63,17 @@ describe("Daily Fare Calculations", () => {
   });
 
   test("Invalid date input", () => {
-    let fareMap = fareCalc.calculateFares(inputFile4);
-    expect(fareMap[0].date).toMatch("Invalid Date");
+    let error = fareCalc.calculateFares(inputFile4);
+    expect(error).not.toHaveProperty("date");
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty("message");
+  });
+
+  test("Invalid zone number input", () => {
+    let error = fareCalc.calculateFares(inputFile8);
+    expect(error).not.toHaveProperty("date");
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toHaveProperty("message");
   });
 });
 

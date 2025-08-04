@@ -49,12 +49,22 @@ class FareCalculation {
    * @param {object} inputJourneyData Input file data to process.
    * @returns {Fare[]} Fare calculated for all the days in the input
    */
-  calculateFares = (inputJourneyData: object): Fare[] => {
+  calculateFares = (inputJourneyData: object): Fare[] | Error => {
     const listJourney: Journey[] = Object.values(inputJourneyData).map(
       (j: Journey) => {
         return { ...j, dateTime: new Date(j.dateTime) }; // Casting to Date field
       }
     );
+
+    // Input validation - Error handling
+    // Tests if the date-time is valid, zone numbers(from and to) are numbers
+    const invalideJourneyInputs = listJourney.filter((e) => {
+      return !this._isValidDate(e.dateTime) || isNaN(e.from) || isNaN(e.to);
+    });
+
+    // Returns error is invalid
+    if (invalideJourneyInputs.length)
+      return new Error("Invalid inputs, provide correct inputs");
 
     const groupingHelper = new GroupingHelper();
 
@@ -85,7 +95,7 @@ class FareCalculation {
       for (let dayJourneys of weekJourney) {
         // Compute each day where key is "dayJourneys.day"
         singleTripFares.push(
-          ...this.findEachTripFare(dayJourneys.dailyJourney)
+          ...this._findEachTripFare(dayJourneys.dailyJourney)
         );
       }
     }
@@ -100,7 +110,7 @@ class FareCalculation {
    * @param {Journey[]} singleDayTrips Single day trips aggregated by date
    * @returns {Fare[]} singleDayFares Fares calculated for each trip
    */
-  findEachTripFare = (singleDayTrips: Journey[]): Fare[] => {
+  _findEachTripFare = (singleDayTrips: Journey[]): Fare[] => {
     // Find maxzone for the day
     let dayMaxZone = this._findMaxZone(singleDayTrips);
 
@@ -222,6 +232,16 @@ class FareCalculation {
    */
   _isWeekend = (dateTime: Date): boolean => {
     return dateTime.getDay() == 0 || dateTime.getDay() == 6;
+  };
+
+  /**
+   * Determines if the date is a valid date or not
+   *
+   * @param {Date} date Date to find
+   * @returns {boolean} True if valid
+   */
+  _isValidDate = (date: Date): boolean => {
+    return date instanceof Date && !isNaN(date.getHours());
   };
 }
 
